@@ -37,9 +37,18 @@ class Memblock:
 	def visuallization(self):
 		self.extract_memory_regions()
 		self.extract_reserved_regions()
+		all = []
 		for region in self.memory_regions:
-			x1 = region.start_addr
-			x2 = region.end_addr
+			all.append(region.start_addr)
+			all.append(region.end_addr)
+		for region in self.reserved_regions:
+			all.append(region.start_addr)
+			all.append(region.end_addr)
+		all = list(set(all))
+		all.sort()
+		for region in self.memory_regions:
+			x1 = all.index(region.start_addr)
+			x2 = all.index(region.end_addr)
 			y1 = y2 = 2
 			plot_memory, = pylab.plot([x1, x2], [y1, y2])
 			# http://blog.csdn.net/sinat_36772813/article/details/77187578
@@ -54,8 +63,8 @@ class Memblock:
 			                textcoords='offset points',
 			                arrowprops=dict(arrowstyle='-'))
 		for region in self.reserved_regions:
-			x1 = region.start_addr
-			x2 = region.end_addr
+			x1 = all.index(region.start_addr)
+			x2 = all.index(region.end_addr)
 			y1 = y2 = 1
 			plot_reserved, = pylab.plot([x1, x2], [y1, y2])
 			# start label
@@ -69,7 +78,7 @@ class Memblock:
 			                textcoords='offset points',
 			                arrowprops=dict(arrowstyle='-'))
 		# x axis scale
-		pylab.xscale('log', basex=2)
+		#pylab.xscale('log', basex=2)
 		# y axis range
 		pylab.yticks(range(4))
 		# legend
